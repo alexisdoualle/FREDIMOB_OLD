@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Spinner
+        android:id="@+id/spinner_fonctionm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_below="@+id/spinner_civilitem"
+        android:layout_marginTop="11dp"
+        android:layout_alignRight="@+id/spinner_civilitem"
+        android:layout_alignEnd="@+id/spinner_civilitem"
+        android:layout_alignLeft="@+id/spinner_civilitem"
+        android:layout_alignStart="@+id/spinner_civilitem" />
+
+    <EditText
+        android:id="@+id/et_nomm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="nom"
+        android:textAlignment="center"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/et_villem"
+        android:layout_alignStart="@+id/et_villem" />
+
+
+    <EditText
+        android:id="@+id/et_prenomm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="prenom"
+        android:textAlignment="center"
+        android:layout_below="@+id/et_nomm"
+        android:layout_alignLeft="@+id/et_nomm"
+        android:layout_alignStart="@+id/et_nomm" />
+
+    <EditText
+        android:id="@+id/et_datenaissancem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:focusableInTouchMode="false"
+        android:inputType="textPersonName"
+        android:text="date de naissance"
+        android:textAlignment="center"
+        android:layout_below="@+id/et_prenomm"
+        android:layout_alignLeft="@+id/et_prenomm"
+        android:layout_alignStart="@+id/et_prenomm" />
+
+    <EditText
+        android:id="@+id/et_adressem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="adresse"
+        android:textAlignment="center"
+        android:layout_below="@+id/et_villem"
+        android:layout_alignLeft="@+id/et_villem"
+        android:layout_alignStart="@+id/et_villem" />
+
+    <EditText
+        android:id="@+id/et_villem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="ville"
+        android:textAlignment="center"
+        android:layout_below="@+id/et_cpm"
+        android:layout_alignLeft="@+id/et_cpm"
+        android:layout_alignStart="@+id/et_cpm" />
+
+    <EditText
+        android:id="@+id/et_cpm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text="CP"
+        android:textAlignment="center"
+        android:layout_below="@+id/et_datenaissancem"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/modifierinfosperso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="22dp"
+        android:text="Modifier" />
+
+    <EditText
+        android:id="@+id/et_mdpm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Mot de passe :"
+        android:inputType="textPassword"
+        android:textAlignment="center"
+        android:layout_below="@+id/spinner_fonctionm"
+        android:layout_alignLeft="@+id/spinner_fonctionm"
+        android:layout_alignStart="@+id/spinner_fonctionm"
+        android:layout_marginTop="15dp" />
+
+    <Spinner
+        android:id="@+id/spinner_civilitem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_marginTop="13dp"
+        android:layout_below="@+id/et_adressem"
+        android:layout_alignLeft="@+id/et_adressem"
+        android:layout_alignStart="@+id/et_adressem" />
+
+</RelativeLayout>

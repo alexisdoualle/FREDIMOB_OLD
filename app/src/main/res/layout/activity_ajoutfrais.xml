@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <Button
+        android:id="@+id/btn_ajouter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="17dp"
+        android:text="Ajouter" />
+
+    <EditText
+        android:id="@+id/et_idd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:ems="10"
+        android:hint="Motif du frais"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/et_trajet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_idd"
+        android:layout_alignStart="@+id/et_idd"
+        android:layout_below="@+id/et_idd"
+        android:ems="10"
+        android:hint="Trajet : Brest-Paris"
+        android:inputType="textPersonName"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/et_km_parcourus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Km parcourus"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:layout_below="@+id/et_trajet"
+        android:layout_alignLeft="@+id/et_trajet"
+        android:layout_alignStart="@+id/et_trajet" />
+
+    <EditText
+        android:id="@+id/et_essence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="essence"
+        android:inputType="numberDecimal"
+        android:textAlignment="center"
+        android:layout_below="@+id/et_km_parcourus"
+        android:layout_alignLeft="@+id/et_km_parcourus"
+        android:layout_alignStart="@+id/et_km_parcourus" />
+
+    <EditText
+        android:id="@+id/et_peage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="peage"
+        android:inputType="numberDecimal"
+        android:textAlignment="center"
+        android:layout_below="@+id/et_essence"
+        android:layout_alignLeft="@+id/et_repas"
+        android:layout_alignStart="@+id/et_repas" />
+
+    <EditText
+        android:id="@+id/et_repas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="repas"
+        android:inputType="numberDecimal"
+        android:textAlignment="center"
+        android:layout_below="@+id/et_peage"
+        android:layout_alignLeft="@+id/et_essence"
+        android:layout_alignStart="@+id/et_essence" />
+
+    <EditText
+        android:id="@+id/et_hebergement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="hebergement"
+        android:inputType="numberDecimal"
+        android:textAlignment="center"
+        android:layout_below="@+id/et_repas"
+        android:layout_alignLeft="@+id/et_repas"
+        android:layout_alignStart="@+id/et_repas" />
+
+    <EditText
+        android:id="@+id/et_date_frais"
+        android:inputType="date"
+        android:focusableInTouchMode="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_hebergement"
+        android:layout_alignStart="@+id/et_hebergement"
+        android:layout_below="@+id/et_hebergement"
+        android:ems="10"
+        android:hint="Date : xxxx-xx-xx"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp"
+        android:text="Ajout d'un frais"
+        android:textAlignment="textStart"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
+
+</RelativeLayout>
