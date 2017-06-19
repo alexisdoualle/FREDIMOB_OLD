@@ -65,6 +65,7 @@ public class AfficherFrais extends AppCompatActivity {
     private String TAG = AjoutFrais.class.getSimpleName();
     ProgressDialog pDialog;
     private FraisInfo fraisInfo;
+
     private FraisInfo fraisInfo2;
     private UserInfo userInfo;
     private UserInfo userInfo2;
@@ -82,8 +83,8 @@ public class AfficherFrais extends AppCompatActivity {
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_PRODUCTS = "plante";
-    private static final  String TAG_FONCTION = "fonction";
-    private static final  String TAG_UTILISATEUR = "utilisateur";
+    private static final String TAG_FONCTION = "fonction";
+    private static final String TAG_UTILISATEUR = "utilisateur";
     private static final String TAG_PID = "ID_frais";
     private static final String TAG_NAME = "motif";
     private static final String TAG_NATURE = "date_frais";
@@ -120,6 +121,7 @@ public class AfficherFrais extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+                /*
                 HashMap<String,String> map=new HashMap<String, String>();
                 map=(HashMap<String,String>)lv.getAdapter().getItem(position);
                 String fonction = map.get(TAG_FONCTION);
@@ -137,8 +139,6 @@ public class AfficherFrais extends AppCompatActivity {
                 String total = map.get(TAG_TOTAL);
                 String km_parcourus = map.get(TAG_KM_PARCOURUS);
 
-
-                // Toast.makeText(AfficherFrais.this,ide,Toast.LENGTH_LONG).show();
 
                 Intent i =new Intent(getApplicationContext(),DetailFrais.class);
 
@@ -159,6 +159,14 @@ public class AfficherFrais extends AppCompatActivity {
 
                 startActivity(i);
                 finish();
+                */
+                /* 0n lance une autre activité en cas d'identification réussie. Voir
+                sharedPreferences sur Android, et bouton logout
+                 */
+
+                Intent intent = new Intent(AfficherFrais.this,DetailFrais.class);
+                startActivity(intent);
+                AfficherFrais.this.finish();
             }
         });
 

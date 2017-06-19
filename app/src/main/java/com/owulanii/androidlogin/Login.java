@@ -2,11 +2,12 @@ package com.owulanii.androidlogin;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,7 +21,16 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -29,182 +39,167 @@ import java.util.regex.Pattern;
 import prefs.UserInfo;
 import prefs.UserSession;
 
-public class Login extends AppCompatActivity implements View.OnClickListener{
-    private static final String TAG = Login.class.getSimpleName();
-    private EditText email, password;
-    private Button login;
-    private TextView signup;
-    private ProgressDialog progressDialog;
-    private UserSession session;
-    private UserInfo userInfo;
+public class Login extends AppCompatActivity {
 
+    public static final int CONNECTION_TIMEOUT=10000;
+    public static final int READ_TIMEOUT=15000;
+    private EditText etEmail;
+    private EditText etPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        email           = (EditText)findViewById(R.id.email);
-        password        = (EditText)findViewById(R.id.password);
-        login           = (Button)findViewById(R.id.login);
-        signup          = (TextView)findViewById(R.id.open_signup);
-        progressDialog  = new ProgressDialog(this);
-        session         = new UserSession(this);
-        userInfo        = new UserInfo(this);
+        // Variables
+        etEmail = (EditText) findViewById(R.id.email);
+        etPassword = (EditText) findViewById(R.id.password);
 
-        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        if(session.isUserLoggedin()){
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        }
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String mail4 = email.getText().toString().trim();
-
-                //géstion des erreurs de saisies
-                if(isEmailValid(mail4) ==false){
-                    email.setError("ex : julien@dupont.fr");
-                }
-                if (password.length() < 3) {
-                    password.setError("le mot de passe doit contenir au moins 3 caractères");
-                } else {
-                    String eemail = email.getText().toString().trim();
-                    String epassword = password.getText().toString().trim();
-                    login(eemail, epassword);
-                }
-            }
-        });
-        signup.setOnClickListener(this);
     }
 
-    private void login(final String email, final String password){
-        // Tag used to cancel the request
-        String tag_string_req = "req_login";
-        progressDialog.setMessage("Connexion en cours...");
-        progressDialog.show();
+    // Quand on click sur le boutton Valider:
+    public void checkLogin(View arg0) {
 
-        StringRequest strReq = new StringRequest(Request.Method.POST,
-                Utils.LOGIN_URL, new Response.Listener<String>() {
+        // obtient les valeurs
+        final String email = etEmail.getText().toString();
+        final String password = etPassword.getText().toString();
 
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Login Response: " + response.toString());
+        // initialise AsyncLogin() avec email et password:
+        new AsyncLogin().execute(email,password);
 
-                try {
-                    JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
+    }
 
-                    // Check for error node in json
-                    if (!error) {
-                        // Now store the user in SQLite
-                        JSONObject user = jObj.getJSONObject("user");
-                        String uId = user.getString("ID");
-                        String uNom = user.getString("nom");
-                        String uPrenom = user.getString("prenom");
-                        String uDateNaissance = user.getString("dateNaissance");
-                        String uSexe = user.getString("sexe");
-                        String email = user.getString("email");
-                        String uFonction = user.getString("fonction");
-                        String uVille = user.getString("ville");
-                        String uCP = user.getString("CP");
-                        String uLicense = user.getString("license");
-                        String uAdresse = user.getString("adresse");
+    private class AsyncLogin extends AsyncTask<String, String, String>
+    {
+        ProgressDialog pdLoading = new ProgressDialog(Login.this);
+        HttpURLConnection conn;
+        URL url = null;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
-                        // Inserting row in users table
-                      //  userInfo.setId(uId);
+            //ecran de chargement:
+            pdLoading.setMessage("\tChargement...");
+            pdLoading.setCancelable(false);
+            pdLoading.show();
 
-                        userInfo.setId(uId);
-                        userInfo.setEmail(email);
-                        userInfo.setFonction(uFonction);
-                        userInfo.setDateNaissance(uDateNaissance);
-                        userInfo.setVille(uVille);
-                        userInfo.setCp(uCP);
-                        userInfo.setNom(uNom);
-                        userInfo.setPrenom(uPrenom);
-                        userInfo.setSexe(uSexe);
-                        userInfo.setLicense(uLicense);
-                        userInfo.setAdresse(uAdresse);
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            try {
 
+                // adresse ip:
+                url = new URL("http://176.158.180.214/login.inc.php");
 
-                        session.setLoggedin(true);
-
-                        startActivity(new Intent(Login.this, MainActivity.class));
-                        finish();
-                    } else {
-                        // Error in login. Get the error message
-                        String errorMsg = jObj.getString("error_msg");
-                        toast(errorMsg);
-                        progressDialog.hide();
-
-                       }
-
-                    } catch (JSONException e) {
-                    // JSON error
-                    e.printStackTrace();
-                    toast("Json error: " + e.getMessage());
-                }
-           }
-
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Login Error: " + error.getMessage());
-                toast("Problème de connexion au serveur.");
-                progressDialog.hide();
+            } catch (MalformedURLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return "exception";
             }
-        }) {
+            try {
+                // Classe HttpURLConnection pour recevoir et envoyer les requetes sql
+                conn = (HttpURLConnection)url.openConnection();
+                conn.setReadTimeout(READ_TIMEOUT);
+                conn.setConnectTimeout(CONNECTION_TIMEOUT);
+                conn.setRequestMethod("POST");
 
-            @Override
-            protected Map<String, String> getParams() {
-                // Posting parameters to login url
-                Map<String, String> params = new HashMap<>();
-                params.put("email", email);
-                params.put("password", password);
+                // setDoInput et setDoOutput pour gerer ce qu'on reçoit et ce qu'on envoie
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
 
-                return params;
+                // ajoute les paramètre à l'url:
+                Uri.Builder builder = new Uri.Builder()
+                        .appendQueryParameter("username", params[0])
+                        .appendQueryParameter("password", params[1]);
+                String query = builder.build().getEncodedQuery();
+
+                // Ouvre la connexion:
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
+                conn.connect();
+
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+                return "exception";
             }
 
-        };
+            try {
 
-        // Adding request to request queue
-        AndroidLoginController.getInstance().addToRequestQueue(strReq, tag_string_req);
-    }
+                int response_code = conn.getResponseCode();
+
+                // vérifie si la connexion a réussi
+                if (response_code == HttpURLConnection.HTTP_OK) {
+
+                    // lie les données du serveur:
+                    InputStream input = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                    StringBuilder result = new StringBuilder();
+                    String line;
 
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.login:
-                String uName = email.getText().toString().trim();
-                String pass  = password.getText().toString().trim();
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
 
-                login(uName, pass);
-                break;
-            case R.id.open_signup:
-                startActivity(new Intent(this, SignUp.class));
-                break;
+                    // envoie les données à la méthode onPostExecute
+                    return(result.toString());
+
+                }else{
+                    return("echec");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "exception";
+            } finally {
+                conn.disconnect();
+            }
+
+
         }
-    }
-    private void toast(String x){
-        Toast.makeText(this, x, Toast.LENGTH_SHORT).show();
-    }
 
-    public static boolean isEmailValid(String email) {
-        boolean isValid = false;
+        @Override
+        protected void onPostExecute(String result) {
 
-        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-        CharSequence inputStr = email;
+            //methode fonctionnant sur l'UI
+            System.out.println("#######################################################");
+            System.out.println("#######################################################");
+            System.out.println("result:");
+            System.out.println(result);
+            System.out.println("#######################################################");
+            System.out.println("#######################################################");
 
-        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(inputStr);
-        if (matcher.matches()) {
-            isValid = true;
+            pdLoading.dismiss();
+
+            if(result.equalsIgnoreCase("true"))
+            {
+
+                /* 0n lance une autre activité en cas d'identification réussie. Voir
+                sharedPreferences sur Android, et bouton logout
+                 */
+
+                Intent intent = new Intent(Login.this,AfficherFrais.class);
+                startActivity(intent);
+                Login.this.finish();
+
+            }else if (result.equalsIgnoreCase("false")){
+
+                // Message d'erreur en cas de mauvais identifiants:
+                Toast.makeText(Login.this, "Email ou mot de passe incorrect", Toast.LENGTH_LONG).show();
+
+            } else if (result.equalsIgnoreCase("exception") || result.equalsIgnoreCase("unsuccessful")) {
+                System.out.println("on est dans: if result.equalsIgnoreCase(exception)");
+                Toast.makeText(Login.this, "Problème de connexion.", Toast.LENGTH_LONG).show();
+
+            }
         }
-        return isValid;
+
     }
 }
